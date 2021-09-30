@@ -1,0 +1,5 @@
+
+src/main/.DS_Store
+target/*
+target/classes/application.properties
+.idea/compiler.xml
