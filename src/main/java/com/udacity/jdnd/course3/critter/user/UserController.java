@@ -90,7 +90,7 @@ public class UserController {
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
-                "Unable to Employee matching that ID."
+                "Unable to find Employee matching that ID."
             );
         }
     }
