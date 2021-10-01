@@ -50,6 +50,7 @@ public class UserController {
         try {
             return customerService.forResponseCustomer(customerService.findByPetId(petId));
         } catch (Exception e) {
+            // https://www.baeldung.com/spring-response-status-exception#2-different-status-code---same-exception-type
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Unable to find customer with a pet matching that ID"
