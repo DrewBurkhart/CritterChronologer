@@ -17,10 +17,10 @@ public class Schedule {
     private long id;
 
     @ManyToMany(targetEntity = Employee.class)
-    private List<Employee> employee;
+    private List<Employee> employees;
 
     @ManyToMany(targetEntity = Pet.class)
-    private List<Pet> pet;
+    private List<Pet> pets;
 
     private LocalDate date;
 
