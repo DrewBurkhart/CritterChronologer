@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
+// https://projectlombok.org/features/Data
 @Data
 @Entity
 public class Customer {
