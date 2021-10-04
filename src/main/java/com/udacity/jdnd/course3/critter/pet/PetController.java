@@ -1,6 +1,8 @@
 package com.udacity.jdnd.course3.critter.pet;
 
+import com.udacity.jdnd.course3.critter.entities.Customer;
 import com.udacity.jdnd.course3.critter.entities.Pet;
+import com.udacity.jdnd.course3.critter.services.CustomerService;
 import com.udacity.jdnd.course3.critter.services.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +21,16 @@ public class PetController {
 
     @Autowired
     private PetService petService;
+    @Autowired
+    private CustomerService customerService;
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         try {
-            Pet pet = petService.fromRequestPet(petDTO);
+            Customer customer = customerService.findById(petDTO.getOwnerId());
+            Pet pet = PetDTO.fromRequestPet(petDTO, customer);
             Pet savedPet = petService.save(pet);
-            return petService.forResponsePet(savedPet);
+            return PetDTO.forResponsePet(savedPet);
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -37,7 +42,7 @@ public class PetController {
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
         try {
-            return petService.forResponsePet(petService.findById(petId));
+            return PetDTO.forResponsePet(petService.findById(petId));
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
@@ -52,7 +57,7 @@ public class PetController {
             List<Pet> pets = petService.findAll();
             return pets
                 .stream()
-                .map(pet -> petService.forResponsePet(pet))
+                .map(PetDTO::forResponsePet)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find any Pets");
@@ -65,7 +70,7 @@ public class PetController {
             List<Pet> pets = petService.findAllByCustomerId(ownerId);
             return pets
                 .stream()
-                .map(pet -> petService.forResponsePet(pet))
+                .map(PetDTO::forResponsePet)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(

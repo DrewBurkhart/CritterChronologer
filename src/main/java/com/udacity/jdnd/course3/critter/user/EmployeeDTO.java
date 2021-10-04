@@ -1,5 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.entities.Employee;
+
 import java.time.DayOfWeek;
 import java.util.Set;
 
@@ -12,6 +14,23 @@ public class EmployeeDTO {
     private String name;
     private Set<EmployeeSkill> skills;
     private Set<DayOfWeek> daysAvailable;
+
+    public static Employee fromRequestEmployee(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        employee.setName(employeeDTO.getName());
+        employee.setSkills(employeeDTO.getSkills());
+        employee.setDaysAvailable(employeeDTO.getDaysAvailable());
+        return employee;
+    }
+
+    public static EmployeeDTO forResponseEmployee(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId((employee.getId()));
+        employeeDTO.setName(employee.getName());
+        employeeDTO.setDaysAvailable(employee.getDaysAvailable());
+        employeeDTO.setSkills(employee.getSkills());
+        return employeeDTO;
+    }
 
     public long getId() {
         return id;

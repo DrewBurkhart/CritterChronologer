@@ -32,9 +32,9 @@ public class UserController {
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
         try {
-            Customer customer = customerService.fromRequestCustomer(customerDTO);
+            Customer customer = CustomerDTO.fromRequestCustomer(customerDTO);
             Customer savedCustomer = customerService.save(customer);
-            return customerService.forResponseCustomer(savedCustomer);
+            return CustomerDTO.forResponseCustomer(savedCustomer);
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -49,7 +49,7 @@ public class UserController {
             List<Customer> customers = customerService.findAll();
             return customers
                 .stream()
-                .map(customer -> customerService.forResponseCustomer(customer))
+                .map(CustomerDTO::forResponseCustomer)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find any Customers");
@@ -59,7 +59,7 @@ public class UserController {
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId) {
         try {
-            return customerService.forResponseCustomer(customerService.findByPetId(petId));
+            return CustomerDTO.forResponseCustomer(customerService.findByPetId(petId));
         } catch (Exception e) {
             // https://www.baeldung.com/spring-response-status-exception#2-different-status-code---same-exception-type
             throw new ResponseStatusException(
@@ -72,9 +72,9 @@ public class UserController {
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         try {
-            Employee employee = employeeService.fromRequestEmployee(employeeDTO);
+            Employee employee = EmployeeDTO.fromRequestEmployee(employeeDTO);
             Employee savedEmployee = employeeService.save(employee);
-            return employeeService.forResponseEmployee(savedEmployee);
+            return EmployeeDTO.forResponseEmployee(savedEmployee);
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -86,7 +86,7 @@ public class UserController {
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
         try {
-            return employeeService.forResponseEmployee(employeeService.findById(employeeId));
+            return EmployeeDTO.forResponseEmployee(employeeService.findById(employeeId));
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
@@ -112,7 +112,7 @@ public class UserController {
         try {
             return employeeService.findBySkill(employeeDTO.getSkills(), employeeDTO.getDate())
                 .stream()
-                .map(employee -> employeeService.forResponseEmployee(employee))
+                .map(EmployeeDTO::forResponseEmployee)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(

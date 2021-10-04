@@ -23,9 +23,11 @@ public class ScheduleController {
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         try {
-            Schedule schedule = scheduleService.fromRequestSchedule(scheduleDTO);
-            Schedule savedSchedule = scheduleService.save(schedule);
-            return scheduleService.forResponseSchedule(savedSchedule);
+            Schedule schedule = ScheduleDTO.fromRequestSchedule(scheduleDTO);
+            List<Long> employeeIds = scheduleDTO.getEmployeeIds();
+            List<Long> petIds = scheduleDTO.getPetIds();
+            Schedule savedSchedule = scheduleService.save(schedule, employeeIds, petIds);
+            return ScheduleDTO.forResponseSchedule(savedSchedule);
         } catch (Exception e) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -40,7 +42,7 @@ public class ScheduleController {
             List<Schedule> schedules = scheduleService.findAll();
             return schedules
                 .stream()
-                .map(schedule -> scheduleService.forResponseSchedule(schedule))
+                .map(ScheduleDTO::forResponseSchedule)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find any Schedules");
@@ -53,7 +55,7 @@ public class ScheduleController {
             List<Schedule> schedules = scheduleService.findScheduleByPetId(petId);
             return schedules
                 .stream()
-                .map(schedule -> scheduleService.forResponseSchedule(schedule))
+                .map(ScheduleDTO::forResponseSchedule)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -69,7 +71,7 @@ public class ScheduleController {
             List<Schedule> schedules = scheduleService.findScheduleByEmployeeId(employeeId);
             return schedules
                 .stream()
-                .map(schedule -> scheduleService.forResponseSchedule(schedule))
+                .map(ScheduleDTO::forResponseSchedule)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(
@@ -85,7 +87,7 @@ public class ScheduleController {
             List<Schedule> schedules = scheduleService.findScheduleByCustomerId(customerId);
             return schedules
                     .stream()
-                    .map(schedule -> scheduleService.forResponseSchedule(schedule))
+                    .map(ScheduleDTO::forResponseSchedule)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new ResponseStatusException(

@@ -8,7 +8,6 @@ import com.udacity.jdnd.course3.critter.repositories.CustomerRepository;
 import com.udacity.jdnd.course3.critter.repositories.EmployeeRepository;
 import com.udacity.jdnd.course3.critter.repositories.PetRepository;
 import com.udacity.jdnd.course3.critter.repositories.ScheduleRepository;
-import com.udacity.jdnd.course3.critter.schedule.ScheduleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +28,17 @@ public class ScheduleService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Schedule save(Schedule schedule) {
+    public Schedule save(Schedule schedule, List<Long> employeeIds, List<Long> petIds) {
+        List<Employee> employees = employeeIds
+                .stream()
+                .map(id -> employeeRepository.getOne(id))
+                .collect(Collectors.toList());
+        schedule.setEmployees(employees);
+        List<Pet> pets = petIds
+                .stream()
+                .map(id -> petRepository.getOne(id))
+                .collect(Collectors.toList());
+        schedule.setPets(pets);
         return scheduleRepository.save(schedule);
     }
 
@@ -50,43 +59,5 @@ public class ScheduleService {
     public List<Schedule> findScheduleByCustomerId(Long id) {
         Customer customer = customerRepository.getOne(id);
         return scheduleRepository.findAllByPetsIn(customer.getPets());
-    }
-
-    public Schedule fromRequestSchedule(ScheduleDTO scheduleDTO) {
-        Schedule schedule = new Schedule();
-        List<Long> employeeIds = scheduleDTO.getEmployeeIds();
-        List<Employee> employees = employeeIds
-            .stream()
-            .map(id -> employeeRepository.getOne(id))
-            .collect(Collectors.toList());
-        schedule.setEmployees(employees);
-        List<Long> petIds = scheduleDTO.getPetIds();
-        List<Pet> pets = petIds
-            .stream()
-            .map(id -> petRepository.getOne(id))
-            .collect(Collectors.toList());
-        schedule.setPets(pets);
-        schedule.setDate(scheduleDTO.getDate());
-        schedule.setActivities(scheduleDTO.getActivities());
-        return schedule;
-    }
-
-    public ScheduleDTO forResponseSchedule(Schedule schedule) {
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        scheduleDTO.setEmployeeIds(
-            schedule.getEmployees()
-                .stream()
-                .map(Employee::getId)
-                .collect(Collectors.toList())
-        );
-        scheduleDTO.setPetIds(
-                schedule.getPets()
-                    .stream()
-                    .map(Pet::getId)
-                    .collect(Collectors.toList())
-        );
-        scheduleDTO.setDate(schedule.getDate());
-        scheduleDTO.setActivities(schedule.getActivities());
-        return scheduleDTO;
     }
 }

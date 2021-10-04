@@ -2,7 +2,6 @@ package com.udacity.jdnd.course3.critter.services;
 
 import com.udacity.jdnd.course3.critter.entities.Employee;
 import com.udacity.jdnd.course3.critter.repositories.EmployeeRepository;
-import com.udacity.jdnd.course3.critter.user.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,22 +41,5 @@ public class EmployeeService {
                 .stream()
                 .filter(employee -> employee.getSkills().containsAll(skills))
                 .collect(Collectors.toList());
-    }
-
-    public Employee fromRequestEmployee(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-        employee.setName(employeeDTO.getName());
-        employee.setSkills(employeeDTO.getSkills());
-        employee.setDaysAvailable(employeeDTO.getDaysAvailable());
-        return employee;
-    }
-
-    public EmployeeDTO forResponseEmployee(Employee employee) {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setId((employee.getId()));
-        employeeDTO.setName(employee.getName());
-        employeeDTO.setDaysAvailable(employee.getDaysAvailable());
-        employeeDTO.setSkills(employee.getSkills());
-        return employeeDTO;
     }
 }
