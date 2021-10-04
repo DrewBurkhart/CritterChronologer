@@ -26,8 +26,8 @@ public class PetService {
     public Pet save(Pet pet) {
         Pet savedPet = petRepository.save(pet);
         Customer customer = customerRepository.getOne(pet.getCustomer().getId());
-        List<Pet> pets = new ArrayList<>();
-        pets.add(savedPet);
+        List<Pet> pets = customer.getPets() != null ? customer.getPets() : new ArrayList<>();
+        pets.add(pet);
         customer.setPets(pets);
         customerRepository.save(customer);
         return savedPet;
