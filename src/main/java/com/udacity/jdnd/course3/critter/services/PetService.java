@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +24,13 @@ public class PetService {
     private CustomerRepository customerRepository;
 
     public Pet save(Pet pet) {
-        return petRepository.save(pet);
+        Pet savedPet = petRepository.save(pet);
+        Customer customer = customerRepository.getOne(pet.getCustomer().getId());
+        List<Pet> pets = new ArrayList<>();
+        pets.add(savedPet);
+        customer.setPets(pets);
+        customerRepository.save(customer);
+        return savedPet;
     }
 
     public Pet findById(Long id) {
