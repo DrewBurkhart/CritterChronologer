@@ -22,7 +22,6 @@ public class ScheduleController {
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-        // employees, pets, data, activities
         try {
             Schedule schedule = scheduleService.fromRequestSchedule(scheduleDTO);
             Schedule savedSchedule = scheduleService.save(schedule);
